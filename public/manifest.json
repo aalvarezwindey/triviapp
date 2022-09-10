@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "TriviApp",
+  "name": "Trivia app",
   "icons": [
     {
       "src": "favicon.ico",
