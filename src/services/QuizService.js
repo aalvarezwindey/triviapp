@@ -13,7 +13,7 @@ class QuizService {
    * Gets ten random quiz questions
    */
   async getRandomQuizQuestions({
-    amount = 2,
+    amount = 10,
     difficulty = 'hard',
     type = 'boolean',
   } = {}) {
@@ -45,8 +45,8 @@ class QuizService {
             number,
             category,
             question,
-            options: [correct_answer, ...incorrect_answers].sort(
-              (a, b) => a < b
+            options: [correct_answer, ...incorrect_answers].sort((a, b) =>
+              String(b).localeCompare(a)
             ),
           })
         );

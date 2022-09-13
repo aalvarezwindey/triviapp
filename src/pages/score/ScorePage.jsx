@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import { logger } from '../../logger';
+import { ROUTES } from '../../routing';
 import QuizService from '../../services/QuizService';
-import { useCurrentAnswers } from '../../store';
+import { useCurrentAnswers, useIsQuizCompleted } from '../../store';
 import PlayAgainAction from './components/PlayAgainAction/PlayAgainAction';
 import QuizQuestionsResults from './components/QuizQuestionsResults/QuizQuestionsResults';
 import QuizScoreHeader from './components/QuizScoreHeader/QuizScoreHeader';
@@ -10,6 +12,7 @@ export default function ScorePage() {
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
   const answers = useCurrentAnswers();
+  const isQuizCompleted = useIsQuizCompleted();
   useEffect(() => {
     const submitAnswers = async () => {
       try {
@@ -18,10 +21,6 @@ export default function ScorePage() {
         answers.forEach(({ answer, questionNumber }) => {
           answersMap[questionNumber] = answer;
         });
-        console.log(
-          '🚀 ~ file: ScorePage.jsx ~ line 17 ~ submitAnswers ~ answersMap',
-          answersMap
-        );
 
         const calculatedResults = await QuizService.submitAnswers({
           answers: answersMap,
@@ -36,6 +35,8 @@ export default function ScorePage() {
       submitAnswers();
     }
   }, [answers]);
+
+  if (!isQuizCompleted) return <Navigate to={ROUTES.LANDING} replace={true} />;
 
   if (error) {
     // TODO: do something better

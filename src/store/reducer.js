@@ -1,8 +1,11 @@
-import { ACTION_TYPES, STATE_KEYS } from './constants';
+import { ACTION_TYPES, INITIAL_STATE, STATE_KEYS } from './constants';
 
 export const reducer = (state, action) => {
   const { type, payload } = action;
   switch (type) {
+    case ACTION_TYPES.RESET_QUIZ: {
+      return INITIAL_STATE;
+    }
     case ACTION_TYPES.SET_QUIZ: {
       const newQuiz = payload[STATE_KEYS.CURRENT_QUIZ];
       return {
