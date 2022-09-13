@@ -1,9 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styles from './QuizNumberLegend.module.css';
 
-function QuizNumberLegend(props) {
-  return <span className={styles.legend}>1 of 10</span>;
+function QuizNumberLegend({ currentQuestionNumber, questionsAmount }) {
+  return (
+    <span className={styles.legend}>
+      {currentQuestionNumber} of {questionsAmount}
+    </span>
+  );
 }
 
 QuizNumberLegend.propTypes = {};

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './QuizOptions.module.css';
 import QuizOption from './components/QuizOption/QuizOption';
 
-function QuizOptions({ options = ['True', 'False'], onOptionSelected }) {
+function QuizOptions({ options, onOptionSelected }) {
   return (
     <div className={styles.options}>
       {options.map((option) => (

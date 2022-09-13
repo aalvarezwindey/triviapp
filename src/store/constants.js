@@ -1,0 +1,16 @@
+export const ACTION_TYPES = {
+  SET_QUIZ: 'SET_QUIZ',
+  ANSWER_QUIZ_QUESTION: 'ANSWER_QUIZ_QUESTION',
+};
+
+export const STATE_KEYS = {
+  CURRENT_QUIZ: 'currenQuiz',
+  CURRENT_QUIZ_QUESTION: 'currentQuizQuestion',
+  CURRENT_ANSWERS: 'currentAnswers',
+};
+
+export const INITIAL_STATE = {
+  [STATE_KEYS.CURRENT_ANSWERS]: [],
+  [STATE_KEYS.CURRENT_QUIZ]: [],
+  [STATE_KEYS.CURRENT_QUIZ_QUESTION]: null,
+};

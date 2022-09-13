@@ -16,7 +16,7 @@ class QuizService {
     amount = 10,
     difficulty = 'hard',
     type = 'boolean',
-  }) {
+  } = {}) {
     try {
       const url = new URL(this.baseURL);
       url.searchParams.set('amount', amount);
@@ -26,12 +26,12 @@ class QuizService {
 
       if (response.ok) {
         const quiz = await response.json();
-        this.currentQuiz = quiz;
+        this.currentQuiz = quiz.results;
 
         // NOTE: this should be done in backend in order to prevent cheating
-        return quiz.map(
+        return this.currentQuiz.map(
           ({ category, question, correct_answer, incorrect_answers }, idx) => ({
-            id: idx,
+            number: idx + 1,
             category,
             question,
             options: [correct_answer, ...incorrect_answers].sort(
