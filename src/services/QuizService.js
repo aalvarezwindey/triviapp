@@ -13,7 +13,7 @@ class QuizService {
    * Gets ten random quiz questions
    */
   async getRandomQuizQuestions({
-    amount = 10,
+    amount = 2,
     difficulty = 'hard',
     type = 'boolean',
   } = {}) {
@@ -26,12 +26,23 @@ class QuizService {
 
       if (response.ok) {
         const quiz = await response.json();
-        this.currentQuiz = quiz.results;
+
+        // add number
+        this.currentQuiz = quiz.results.map((q, idx) => ({
+          ...q,
+          number: idx + 1,
+        }));
 
         // NOTE: this should be done in backend in order to prevent cheating
         return this.currentQuiz.map(
-          ({ category, question, correct_answer, incorrect_answers }, idx) => ({
-            number: idx + 1,
+          ({
+            number,
+            category,
+            question,
+            correct_answer,
+            incorrect_answers,
+          }) => ({
+            number,
             category,
             question,
             options: [correct_answer, ...incorrect_answers].sort(
@@ -48,6 +59,18 @@ class QuizService {
       logger.error('[QuizService][getRandomQuizQuestions] error', err);
       throw err;
     }
+  }
+
+  // NOTE: this should be done in backend in order to prevent cheating
+  // answers should be a object of { questionNumber: answer } shape
+  async submitAnswers({ answers = {} }) {
+    return Promise.resolve(
+      this.currentQuiz.map(({ question, number, correct_answer }) => ({
+        question,
+        answer: answers[number],
+        isCorrect: answers[number] === correct_answer,
+      }))
+    );
   }
 }
 

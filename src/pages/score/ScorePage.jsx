@@ -1,71 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { logger } from '../../logger';
+import QuizService from '../../services/QuizService';
+import { useCurrentAnswers } from '../../store';
 import PlayAgainAction from './components/PlayAgainAction/PlayAgainAction';
 import QuizQuestionsResults from './components/QuizQuestionsResults/QuizQuestionsResults';
 import QuizScoreHeader from './components/QuizScoreHeader/QuizScoreHeader';
 
 export default function ScorePage() {
-  const results = [
-    {
-      question:
-        'If you could fold a piece of paper in half 50 times, its&#039; thickness will be 3/4th the distance from the Earth to the Sun.',
-      answer: ['True', 'False'][Math.floor(Math.random() * 2)],
-      isCorrect: [true, false][Math.floor(Math.random() * 2)],
-    },
-    {
-      question:
-        'If you could fold a piece of paper in half 50 times, its&#039; thickness will be 3/4th the distance from the Earth to the Sun.',
-      answer: ['True', 'False'][Math.floor(Math.random() * 2)],
-      isCorrect: [true, false][Math.floor(Math.random() * 2)],
-    },
-    {
-      question:
-        'If you could fold a piece of paper in half 50 times, its&#039; thickness will be 3/4th the distance from the Earth to the Sun.',
-      answer: ['True', 'False'][Math.floor(Math.random() * 2)],
-      isCorrect: [true, false][Math.floor(Math.random() * 2)],
-    },
-    {
-      question:
-        'If you could fold a piece of paper in half 50 times, its&#039; thickness will be 3/4th the distance from the Earth to the Sun.',
-      answer: ['True', 'False'][Math.floor(Math.random() * 2)],
-      isCorrect: [true, false][Math.floor(Math.random() * 2)],
-    },
-    {
-      question:
-        'If you could fold a piece of paper in half 50 times, its&#039; thickness will be 3/4th the distance from the Earth to the Sun.',
-      answer: ['True', 'False'][Math.floor(Math.random() * 2)],
-      isCorrect: [true, false][Math.floor(Math.random() * 2)],
-    },
-    {
-      question:
-        'If you could fold a piece of paper in half 50 times, its&#039; thickness will be 3/4th the distance from the Earth to the Sun.',
-      answer: ['True', 'False'][Math.floor(Math.random() * 2)],
-      isCorrect: [true, false][Math.floor(Math.random() * 2)],
-    },
-    {
-      question:
-        'If you could fold a piece of paper in half 50 times, its&#039; thickness will be 3/4th the distance from the Earth to the Sun.',
-      answer: ['True', 'False'][Math.floor(Math.random() * 2)],
-      isCorrect: [true, false][Math.floor(Math.random() * 2)],
-    },
-    {
-      question:
-        'If you could fold a piece of paper in half 50 times, its&#039; thickness will be 3/4th the distance from the Earth to the Sun.',
-      answer: ['True', 'False'][Math.floor(Math.random() * 2)],
-      isCorrect: [true, false][Math.floor(Math.random() * 2)],
-    },
-    {
-      question:
-        'If you could fold a piece of paper in half 50 times, its&#039; thickness will be 3/4th the distance from the Earth to the Sun.',
-      answer: ['True', 'False'][Math.floor(Math.random() * 2)],
-      isCorrect: [true, false][Math.floor(Math.random() * 2)],
-    },
-    {
-      question:
-        'If you could fold a piece of paper in half 50 times, its&#039; thickness will be 3/4th the distance from the Earth to the Sun.',
-      answer: ['True', 'False'][Math.floor(Math.random() * 2)],
-      isCorrect: [true, false][Math.floor(Math.random() * 2)],
-    },
-  ];
+  const [results, setResults] = useState(null);
+  const [error, setError] = useState(null);
+  const answers = useCurrentAnswers();
+  useEffect(() => {
+    const submitAnswers = async () => {
+      try {
+        const answersMap = {};
+
+        answers.forEach(({ answer, questionNumber }) => {
+          answersMap[questionNumber] = answer;
+        });
+        console.log(
+          '🚀 ~ file: ScorePage.jsx ~ line 17 ~ submitAnswers ~ answersMap',
+          answersMap
+        );
+
+        const calculatedResults = await QuizService.submitAnswers({
+          answers: answersMap,
+        });
+        setResults(calculatedResults);
+      } catch (err) {
+        logger.error('[ScorePage][submitAnswers] error', err);
+        setError(err);
+      }
+    };
+    if (answers && answers.length) {
+      submitAnswers();
+    }
+  }, [answers]);
+
+  if (error) {
+    // TODO: do something better
+    return <h1>Could not calculate results... please try again</h1>;
+  }
+
+  if (!results) {
+    // TODO: show something more fancy
+    return <h1>Calculating results...</h1>;
+  }
+
   return (
     <>
       <QuizScoreHeader

@@ -25,7 +25,10 @@ export const reducer = (state, action) => {
       const previousAnswers = state[STATE_KEYS.CURRENT_ANSWERS];
       const newState = {
         ...state,
-        [STATE_KEYS.CURRENT_ANSWERS]: [...previousAnswers, answer],
+        [STATE_KEYS.CURRENT_ANSWERS]: [
+          ...previousAnswers,
+          { answer, questionNumber: currentQuestion.number },
+        ],
         [STATE_KEYS.CURRENT_QUIZ_QUESTION]: nextQuestion,
       };
 
